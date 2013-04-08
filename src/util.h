@@ -647,11 +647,21 @@ inline bool AffinityBugWorkaround(void(*pfn)(void*))
 {
 #if defined(__WXMSW__) || defined(_MSC_VER)
     // Sometimes after a few hours affinity gets stuck on one processor
+#if defined(_WIN32) && !defined(_WIN64)
     DWORD dwProcessAffinityMask = -1;
     DWORD dwSystemAffinityMask = -1;
+		DWORD dwPrev1;
+		DWORD dwPrev2;
+#endif
+#if defined(_WIN64)
+    DWORD64 dwProcessAffinityMask;
+    DWORD64 dwSystemAffinityMask;
+		DWORD dwPrev1;
+		DWORD dwPrev2;
+#endif
     GetProcessAffinityMask(GetCurrentProcess(), &dwProcessAffinityMask, &dwSystemAffinityMask);
-    DWORD dwPrev1 = SetThreadAffinityMask(GetCurrentThread(), dwProcessAffinityMask);
-    DWORD dwPrev2 = SetThreadAffinityMask(GetCurrentThread(), dwProcessAffinityMask);
+    dwPrev1 = SetThreadAffinityMask(GetCurrentThread(), dwProcessAffinityMask);
+    dwPrev2 = SetThreadAffinityMask(GetCurrentThread(), dwProcessAffinityMask);
     if (dwPrev2 != dwProcessAffinityMask)
     {
         printf("AffinityBugWorkaround() : SetThreadAffinityMask=%d, ProcessAffinityMask=%d, restarting thread\n", dwPrev2, dwProcessAffinityMask);

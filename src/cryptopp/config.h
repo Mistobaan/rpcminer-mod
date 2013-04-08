@@ -282,7 +282,7 @@ NAMESPACE_END
 #endif
 
 #if !defined(CRYPTOPP_DISABLE_ASM) && defined(_MSC_VER) && defined(_M_X64)
-	#define CRYPTOPP_X64_MASM_AVAILABLE
+	//#define CRYPTOPP_X64_MASM_AVAILABLE
 #endif
 
 #if !defined(CRYPTOPP_DISABLE_ASM) && defined(__GNUC__) && defined(__x86_64__)

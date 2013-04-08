@@ -35,11 +35,13 @@ m_outD(NULL)
 {
 
     int num_gpus = 0; //count of gpus
-    CUDA_CHECK(cudaGetDeviceCount(&num_gpus));
-    //##ERROR handling
+		CUDA_CHECK(cudaGetDeviceCount(&num_gpus));
+
+		//##ERROR handling
     if (num_gpus < 1) //check if cuda device ist found
     {
-        throw std::runtime_error("no CUDA capable devices detected");
+			std::cerr << "no CUDA capable devices detected";
+      throw std::runtime_error("no CUDA capable devices detected");
     }
     m_devicecount = num_gpus;
 

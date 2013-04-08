@@ -52,7 +52,7 @@ void RPCMinerThreadGPU::Run(void *arg)
     blockbuffptr = alignup < 16 > (currentblockbuff);
     nonce = (unsigned int *) (blockbuffptr + 12);
 
-    gpurunnertype gpu;
+		gpurunnertype gpu;
 
     if (gpu.GetDeviceIndex() < 0)
     {

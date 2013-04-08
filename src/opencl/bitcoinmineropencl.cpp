@@ -58,6 +58,9 @@ OpenCLRunner::OpenCLRunner():GPURunner<cl_uint,cl_uint>(TYPE_OPENCL),m_platform(
 #ifdef _WIN32
 	buildoptions+="-D _WIN32 ";
 #endif
+#ifdef _WIN64
+	buildoptions+="-D _WIN64 ";
+#endif
 
 	if(numplatforms>0 && m_platform>=0 && m_platform<numplatforms)
 	{

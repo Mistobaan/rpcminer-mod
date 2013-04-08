@@ -22,6 +22,7 @@
 
 #if defined(_WIN32) && defined(_DEBUG)
 #include <DbgHelp.h>
+bool show_stack(std::ostream &, HANDLE hThread, CONTEXT& c);
 #endif
 
 std::map<std::string,std::string> mapArgs;
@@ -45,6 +46,11 @@ void CreateMiniDump(EXCEPTION_POINTERS* pep)
   HMODULE h = ::LoadLibrary("DbgHelp.dll");
   PDUMPFN pFn = (PDUMPFN)GetProcAddress(h, "MiniDumpWriteDump");
 
+	HANDLE hThread;
+	DuplicateHandle(GetCurrentProcess(), GetCurrentThread(), GetCurrentProcess(), &hThread, 0, false, DUPLICATE_SAME_ACCESS);
+	show_stack(std::cout, hThread, *(pep->ContextRecord));
+	CloseHandle(hThread);
+
   if (hFile != NULL && hFile != INVALID_HANDLE_VALUE) 
   {
     MINIDUMP_EXCEPTION_INFORMATION mdei; 
@@ -59,6 +65,7 @@ void CreateMiniDump(EXCEPTION_POINTERS* pep)
 
     CloseHandle( hFile ); 
   }
+
 }
 
 LONG WINAPI RpcMinerUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *ExceptionInfo)
@@ -66,6 +73,7 @@ LONG WINAPI RpcMinerUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *Excepti
 	CreateMiniDump(ExceptionInfo);
 	return EXCEPTION_EXECUTE_HANDLER;
 }
+
 #endif
 
 void ParseParameters(int argc, char* argv[])

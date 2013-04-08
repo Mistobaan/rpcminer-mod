@@ -112,6 +112,7 @@
     <ClCompile Include="src\rpcminer\rpcminerthreadgpu.cpp" />
     <ClCompile Include="src\rpcminer\rpcrequest.cpp" />
     <ClCompile Include="src\sha256.cpp" />
+    <ClCompile Include="src\stackwalker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\base58.h" />

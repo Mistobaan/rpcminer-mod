@@ -35,6 +35,7 @@ public:
 	virtual const bool Start()
 	{
 		m_threaddata.m_done=false;
+		m_threaddata.m_error=false;
 		m_threaddata.m_havework=false;
 		m_threaddata.m_generate=true;
 		m_threaddata.m_nextblock.m_blockid=0;
@@ -52,6 +53,11 @@ public:
 	const bool Done()
 	{
 		return m_threaddata.m_done;
+	}
+
+	const bool HasError()
+	{
+		return m_threaddata.m_error;
 	}
 
 	const bool HaveFoundHash()
@@ -152,6 +158,7 @@ protected:
 		nextblock m_nextblock;
 		std::vector<foundhash> m_foundhashes;
 		int64 m_hashcount;
+		bool m_error;
 	};
 
 	threaddata m_threaddata;
@@ -223,6 +230,18 @@ public:
 		for(std::vector<RPCMinerThread *>::const_iterator i=m_minerthreads.begin(); i!=m_minerthreads.end(); i++)
 		{
 			if((*i)->HasWork()==true)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	const bool HasError() const
+	{
+		for(std::vector<RPCMinerThread *>::const_iterator i=m_minerthreads.begin(); i!=m_minerthreads.end(); i++)
+		{
+			if((*i)->HasError()==true)
 			{
 				return true;
 			}

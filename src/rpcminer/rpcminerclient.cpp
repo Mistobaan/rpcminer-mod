@@ -224,7 +224,7 @@ void RPCMinerClient::Run(const std::string &url, const std::string &user, const 
 	std::cout << "Client will start " << m_threadcount << " miner threads" << std::endl;
 	std::cout << "Work will be refreshed every " << m_workrefreshms << " ms" << std::endl;
 
-	while(Done()==false)
+	while(Done()==false && HasError() == false)
 	{
 		if(m_minerthreads.RunningThreadCount()<m_threadcount)
 		{

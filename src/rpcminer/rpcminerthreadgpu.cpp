@@ -32,7 +32,8 @@ RPCMinerThreadGPU::~RPCMinerThreadGPU()
 
 void RPCMinerThreadGPU::Run(void *arg)
 {
-    threaddata *td = (threaddata *) arg;
+	threaddata *td = (threaddata *) arg;
+	try {
     int64 currentblockid = -1;
 
     static const unsigned int SHA256InitState[8] = {0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19};
@@ -175,35 +176,35 @@ void RPCMinerThreadGPU::Run(void *arg)
                 continue;
             }
 
-            for (int64 i = 0; i < iterations; i++)
-            {
+	          for (int64 i = 0; i < iterations; i++)
+		        {
 
-                gpunonce = gpu.RunStep((*nonce));
-                if (gpunonce != 0)
-                {
-                    (*nonce) = CryptoPP::ByteReverse(gpunonce);
-                    printf("Found nonce %X\n",(*nonce));
-                    SHA256Transform(&temphash, (void *) blockbuffptr, (void *) midbuffptr);
-                    SHA256Transform(&hash, &temphash, SHA256InitState);
+              gpunonce = gpu.RunStep((*nonce));
+              if (gpunonce != 0)
+              {
+                  (*nonce) = CryptoPP::ByteReverse(gpunonce);
+                  printf("Found nonce %X\n",(*nonce));
+                  SHA256Transform(&temphash, (void *) blockbuffptr, (void *) midbuffptr);
+                  SHA256Transform(&hash, &temphash, SHA256InitState);
 
-                    if (hash < currenttarget && lastHash != (*nonce))
-                    {
-                        CRITICAL_BLOCK(td->m_cs);
+                  if (hash < currenttarget && lastHash != (*nonce))
+                  {
+                      CRITICAL_BLOCK(td->m_cs);
 
-                        td->m_foundhashes.push_back(foundhash(currentblockid, (*nonce)));
-                    }
-                    lastHash = (*nonce);
+                      td->m_foundhashes.push_back(foundhash(currentblockid, (*nonce)));
+                  }
+                  lastHash = (*nonce);
 
-                }
+              }
 
-                (*nonce) += (gpu.GetStepIterations() * gpu.GetNumBlocks() * gpu.GetNumThreads());
+              (*nonce) += (gpu.GetStepIterations() * gpu.GetNumBlocks() * gpu.GetNumThreads());
 
-                {
-                    CRITICAL_BLOCK(td->m_cs);
-                    td->m_hashcount += (gpu.GetStepIterations() * gpu.GetNumBlocks() * gpu.GetNumThreads());
-                }
+              {
+                  CRITICAL_BLOCK(td->m_cs);
+                  td->m_hashcount += (gpu.GetStepIterations() * gpu.GetNumBlocks() * gpu.GetNumThreads());
+              }
 
-            }
+						}
 
         }
         else
@@ -218,7 +219,13 @@ void RPCMinerThreadGPU::Run(void *arg)
         CRITICAL_BLOCK(td->m_cs);
         td->m_done = true;
     }
-
+	}
+	catch (std::runtime_error ex)
+	{
+    CRITICAL_BLOCK(td->m_cs);
+    td->m_done = true;
+		td->m_error = true;
+	}
 }
 
 #endif	// defined(_BITCOIN_MINER_CUDA_) || defined(_BITCOIN_MINER_OPENCL_)

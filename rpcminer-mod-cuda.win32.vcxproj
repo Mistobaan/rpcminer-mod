@@ -64,7 +64,7 @@
       <AdditionalDependencies>libcurl.lib;cuda.lib;cudart.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
-      <Command>"$(ProjectDir)buildcuda_debug.bat"</Command>
+      <Command>"$(ProjectDir)buildcuda32_debug.bat"</Command>
     </CustomBuildStep>
     <CustomBuildStep>
       <Message>Compile bitcoinminercuda.cu</Message>
@@ -90,7 +90,7 @@
       <AdditionalDependencies>libcurl.lib;cuda.lib;cudart.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
-      <Command>"$(ProjectDir)buildcuda.bat"</Command>
+      <Command>"$(ProjectDir)buildcuda32.bat"</Command>
       <Message>Compile bitcoinminercuda.cu</Message>
       <Outputs>$(ProjectDir)src\cuda\bitcoinminercuda.cu.obj</Outputs>
       <Inputs>$(ProjectDir)src\cuda\bitcoinminercuda.cu;%(Inputs)</Inputs>

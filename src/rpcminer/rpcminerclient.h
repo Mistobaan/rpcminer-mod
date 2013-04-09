@@ -52,6 +52,8 @@ public:
 
 	const bool HasWork()	{ CRITICAL_BLOCK(m_cs); return m_minerthreads.HasWork(); }
 
+	const bool HasError()	{ CRITICAL_BLOCK(m_cs); return m_minerthreads.HasError(); }
+
 protected:
 
 	const bool EncodeBase64(const std::vector<unsigned char> &data, std::string &encoded) const;

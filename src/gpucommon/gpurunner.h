@@ -26,7 +26,7 @@ class GPURunner
 {
 public:
     typedef unsigned int uint32;
-    GPURunner(const int type = TYPE_NONE);
+    GPURunner(threaddata* td, const int type = TYPE_NONE);
     virtual ~GPURunner();
 
     typedef STEPTYPE StepType;
@@ -106,7 +106,7 @@ private:
 };
 
 template <class STEPTYPE, class DEVICECOUNTTYPE>
-GPURunner<STEPTYPE, DEVICECOUNTTYPE>::GPURunner(const int type) :
+GPURunner<STEPTYPE, DEVICECOUNTTYPE>::GPURunner(threaddata* td, const int type) :
 m_type(type), m_devicecount(0), m_deviceindex(-1),
 m_numb(16), m_numt(16), m_bits(6), m_requestedgrid(-1), m_requestedthreads(256)//m_mode(MODE_REGULAR)
 {

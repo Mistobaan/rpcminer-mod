@@ -1,0 +1,35 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rpcminer-mod-cuda", "rpcminer-mod-cuda.vcxproj", "{E2B19414-E174-9BE3-99CA-05C0711F6056}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rpcminer-mod-opencl", "rpcminer-mod-opencl.vcxproj", "{9322EDA0-70D9-70C9-1271-F955F9BFB10C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E2B19414-E174-9BE3-99CA-05C0711F6056}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E2B19414-E174-9BE3-99CA-05C0711F6056}.Debug|Win32.Build.0 = Debug|Win32
+		{E2B19414-E174-9BE3-99CA-05C0711F6056}.Debug|x64.ActiveCfg = Debug|x64
+		{E2B19414-E174-9BE3-99CA-05C0711F6056}.Debug|x64.Build.0 = Debug|x64
+		{E2B19414-E174-9BE3-99CA-05C0711F6056}.Release|Win32.ActiveCfg = Release|Win32
+		{E2B19414-E174-9BE3-99CA-05C0711F6056}.Release|Win32.Build.0 = Release|Win32
+		{E2B19414-E174-9BE3-99CA-05C0711F6056}.Release|x64.ActiveCfg = Release|x64
+		{E2B19414-E174-9BE3-99CA-05C0711F6056}.Release|x64.Build.0 = Release|x64
+		{9322EDA0-70D9-70C9-1271-F955F9BFB10C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9322EDA0-70D9-70C9-1271-F955F9BFB10C}.Debug|Win32.Build.0 = Debug|Win32
+		{9322EDA0-70D9-70C9-1271-F955F9BFB10C}.Debug|x64.ActiveCfg = Debug|x64
+		{9322EDA0-70D9-70C9-1271-F955F9BFB10C}.Debug|x64.Build.0 = Debug|x64
+		{9322EDA0-70D9-70C9-1271-F955F9BFB10C}.Release|Win32.ActiveCfg = Release|Win32
+		{9322EDA0-70D9-70C9-1271-F955F9BFB10C}.Release|Win32.Build.0 = Release|Win32
+		{9322EDA0-70D9-70C9-1271-F955F9BFB10C}.Release|x64.ActiveCfg = Release|x64
+		{9322EDA0-70D9-70C9-1271-F955F9BFB10C}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

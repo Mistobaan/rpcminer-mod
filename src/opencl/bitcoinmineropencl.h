@@ -30,7 +30,7 @@ typedef unsigned int uint32;
 class OpenCLRunner:public GPURunner<cl_uint,cl_uint>
 {
 public:
-	OpenCLRunner();
+	OpenCLRunner(threaddata* td);
 	~OpenCLRunner();
 
 	void FindBestConfiguration();

@@ -18,46 +18,91 @@
 
 #define NOMINMAX
 
+#include "..\rpcminer\rpcminerthread.h"
+
 #include "bitcoinminercuda.h"
 #include "cudashared.h"
 #include "../cryptopp/sha.h"	// for CryptoPP::ByteReverse
 //#include <cutil_inline.h>
 #include <limits>
 
+#ifdef _WIN32
+#include "..\winregistry.h"
+#endif
+
 #define ALIGN_UP(offset, alignment) \
 	(offset) = ((offset) + (alignment) - 1) & ~((alignment) - 1)
 
-CUDARunner::CUDARunner() : GPURunner<unsigned long, int>(TYPE_CUDA),
+CUDARunner::CUDARunner(threaddata* td) : GPURunner<unsigned long, int>(td, TYPE_CUDA),
 m_inH(NULL),
 m_inD(NULL),
 m_outH(NULL),
 m_outD(NULL)
 {
+		
+		int num_gpus = 0; //count of gpus
+		CUDA_CHECK(cudaGetDeviceCount(&num_gpus));
 
-    int num_gpus = 0; //count of gpus
-    CUDA_CHECK(cudaGetDeviceCount(&num_gpus));
-    //##ERROR handling
+		//##ERROR handling
     if (num_gpus < 1) //check if cuda device ist found
     {
-        throw std::runtime_error("no CUDA capable devices detected");
+			std::cerr << "no CUDA capable devices detected";
+      throw std::runtime_error("no CUDA capable devices detected");
     }
     m_devicecount = num_gpus;
 
     std::cout << num_gpus << " GPU GUDA device(s) found" << std::endl;
 
-		if (m_deviceindex < 0)
+		if (m_deviceindex == -1 && td->m_deviceIndex >= 0)
 		{
-			m_deviceindex=0;
+			// use this auto next device
+			m_deviceindex = td->m_deviceIndex;
 		}
-    if (num_gpus < m_deviceindex) //check if i can select device with diviceNumber
+		else if (m_deviceindex == -1)
+		{
+			// set to first device
+			m_deviceindex = 0;
+			td->m_deviceIndex = m_deviceindex;
+		}
+
+		if (m_deviceindex >= 0 && num_gpus < m_deviceindex) //check if i can select device with diviceNumber
     {
-        std::cerr << "no CUDA device " << m_deviceindex << ", only " << num_gpus << " devices found" << std::endl;
-        throw std::runtime_error("CUDA capable devices can't be selected");
+			std::cerr << "no CUDA device " << m_deviceindex << ", only " << num_gpus << " devices found" << std::endl;
+			throw std::runtime_error("CUDA capable devices can't be selected");
     }
+
+    std::cout << "Setting GPU GUDA device " << m_deviceindex << std::endl;
 
     CUDA_CHECK(cudaSetDevice(m_deviceindex));
     CUDA_CHECK(cudaSetDeviceFlags(cudaDeviceScheduleYield));
     std::cout << "CUDA initialized" << std::endl;
+
+#ifdef _WIN32
+		// Windows has a built in timeout for graphics drivers where it is faulted if more time than specified in TdrDelay
+		// is spent out of the driver. Default is 2 seconds, so we warn if too low.
+		// see http://msdn.microsoft.com/en-us/library/windows/hardware/ff569918(v=vs.85).aspx
+		Registry registry;
+		DWORD tdrDelay= (DWORD)0;
+		DWORD tdrDdiDelay= (DWORD)0;
+
+		if (registry.Open("SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers") == true)
+		{
+			registry.ReadDword("TdrDelay", &tdrDelay);
+			registry.ReadDword("tdrDdiDelay", &tdrDdiDelay);
+
+			registry.Close();
+		}
+
+		if (tdrDelay == 0 || tdrDelay <= 5)
+		{
+	    std::cout << "WARNING: TdrDelay is " << (tdrDelay != 0 ? tdrDelay + " seconds" : "not set") << ", which may cause crashes during long periods" << std::endl;
+	    std::cout << "         of GPU processing. Either set -gpugrid=256 or -gpugrid=512," << std::endl;
+	    std::cout << "         or increase timeout in Windows registry, for instance," << std::endl;
+	    std::cout << "         HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers," << std::endl;
+	    std::cout << "         set TdrDelay to 10 (DWORD) and TdrDdiDelay to 60 (DWORD)" << std::endl;
+	    std::cout << "         Please backup your registry and restore any previous settings after mining." << std::endl;
+		}
+#endif
 }
 
 CUDARunner::~CUDARunner()

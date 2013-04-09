@@ -2,17 +2,19 @@ This is the Windows 64-bit build of psychocoder's version of rpcminer-mod (https
 
 See "NVIDIA Kepler (K20) from 134MHash/s to 330MHash/s with CUDA" (https://bitcointalk.org/index.php?topic=163750)
 
+This mod is primarily for better optimisations with the newer K20 NVIDIA cards, such as GTX TITAN and Tesla K20. You can still use it on all NVIDIA CUDA compatibale cards, but you may not see any great improvements with other mining software.
+
 Windows
 =======
 
 NVIDIA
 ------
 
-Get the contents of the bin folder and execute:
+Either clone the repository using Git or click the Zip button above and extract it. Go into the bin folder and execute:
 
 rpcminer-mod-cuda.exe -url=http://<yourpool>:port -user=username -password=password -gpu -gputhreads=256 -aggression=11
 	
-(see https://bitcointalk.org/index.php?topic=163750 for optimised paramters)
+(see https://bitcointalk.org/index.php?topic=163750 for optimised parameters)
 		
 		
 ATI/OpenCL
@@ -30,12 +32,12 @@ rpcminer-mod-opencl.exe -url=http://<yourpool>:port -user=username -password=pas
 Multiple Cards
 --------------
 	
-You would normally not use the "-threads" paramater with GPU mining (only CPU), however, if you have multiple cards you can use it to set a number of threads that matches the number of GPU cards you have, such as "-threads=2", which will automatically pickup GPU0 and GPU1.
+You would normally not use the "-threads" parameter with GPU mining (only CPU), however, if you have multiple cards you can use it to set a number of threads that matches the number of GPU cards you have, such as "-threads=2", which will automatically pickup GPU0 and GPU1.
 e.g. rpcminer-mod-cuda.exe -url=http://<yourpool>:port -user=username -password=password -threads=2 -gpu -aggression=11
 	
 Don't specifiy more threads than you have cards, it will fail.
 	
-Most pools allow this on the same worker, but if you want to use different workers you will need to run it in two different command windows with "-gpu=0" and "-gpu=1".
+Most pools allow this on the same worker, but if you want to use different workers you will need to run it in two different command windows explicitly with "-gpu=0" and "-gpu=1".
 
 	
 To Compile

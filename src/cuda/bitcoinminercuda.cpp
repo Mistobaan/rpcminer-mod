@@ -26,10 +26,6 @@
 //#include <cutil_inline.h>
 #include <limits>
 
-#ifdef _WIN32
-#include "..\winregistry.h"
-#endif
-
 #define ALIGN_UP(offset, alignment) \
 	(offset) = ((offset) + (alignment) - 1) & ~((alignment) - 1)
 
@@ -77,32 +73,6 @@ m_outD(NULL)
     CUDA_CHECK(cudaSetDeviceFlags(cudaDeviceScheduleYield));
     std::cout << "CUDA initialized" << std::endl;
 
-#ifdef _WIN32
-		// Windows has a built in timeout for graphics drivers where it is faulted if more time than specified in TdrDelay
-		// is spent out of the driver. Default is 2 seconds, so we warn if too low.
-		// see http://msdn.microsoft.com/en-us/library/windows/hardware/ff569918(v=vs.85).aspx
-		Registry registry;
-		DWORD tdrDelay= (DWORD)0;
-		DWORD tdrDdiDelay= (DWORD)0;
-
-		if (registry.Open("SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers") == true)
-		{
-			registry.ReadDword("TdrDelay", &tdrDelay);
-			registry.ReadDword("tdrDdiDelay", &tdrDdiDelay);
-
-			registry.Close();
-		}
-
-		if (tdrDelay == 0 || tdrDelay <= 5)
-		{
-	    std::cout << "WARNING: TdrDelay is " << (tdrDelay != 0 ? tdrDelay + " seconds" : "not set") << ", which may cause crashes during long periods" << std::endl;
-	    std::cout << "         of GPU processing. Either set -gpugrid=256 or -gpugrid=512," << std::endl;
-	    std::cout << "         or increase timeout in Windows registry, for instance," << std::endl;
-	    std::cout << "         HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers," << std::endl;
-	    std::cout << "         set TdrDelay to 10 (DWORD) and TdrDdiDelay to 60 (DWORD)" << std::endl;
-	    std::cout << "         Please backup your registry and restore any previous settings after mining." << std::endl;
-		}
-#endif
 }
 
 CUDARunner::~CUDARunner()

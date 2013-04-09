@@ -5,26 +5,41 @@ See "NVIDIA Kepler (K20) from 134MHash/s to 330MHash/s with CUDA" (https://bitco
 Windows
 =======
 
-	NVIDIA:
+	NVIDIA
+	------
 
-	Get the contents of the bin folder and execute:
+		Get the contents of the bin folder and execute:
 
 		rpcminer-mod-cuda.exe -url=http://<yourpool>:port -user=username -password=password -gpu -gputhreads=256 -aggression=11
 	
 		(see https://bitcointalk.org/index.php?topic=163750 for optimised paramters)
+		
+		
+	ATI/OpenCL
+	----------
 
-	ATI/OpenCL:
+		Download and install the AMD APP for OpenCL.
 
-	Download and install the AMD APP for OpenCL.
-
-	Get the contents of the bin folder and execute:
+		Get the contents of the bin folder and execute:
 
 		rpcminer-mod-opencl.exe -url=http://<yourpool>:port -user=username -password=password -gpu
 	
 		(see notes below for optimised paramters)
 
+		
+	Multiple Cards
+	--------------
+	
+	You would normally not use the "-threads" paramater with GPU mining (only CPU), however, if you have multiple cards you can use it to set a number of threads that matches the number of GPU cards you have, such as "-threads=2", which will automatically pickup GPU0 and GPU1.
+	e.g. rpcminer-mod-cuda.exe -url=http://<yourpool>:port -user=username -password=password -threads=2 -gpu -aggression=11
+	
+	Don't specifiy more threads than you have cards, it will fail.
+	
+	Most pools allow this on the same worker, but if you want to use different workers you will need to run it in two different command windows with "-gpu=0" and "-gpu=1".
 
-	To build:
+	
+	To Compile
+	----------
 
 	Requires Visual Studio 2010 and appropriate SDK:
 		NVIDIA: GPU Computing Toolkit for CUDA 64-bit (5.x), or
@@ -36,6 +51,7 @@ Windows
 
 	Build.
 
+	
 UNIX
 ====
 

@@ -44,7 +44,7 @@
 class CUDARunner:public GPURunner<unsigned long,int>
 {
 public:
-	CUDARunner();
+	CUDARunner(threaddata* td);
 	~CUDARunner();
 
 	void FindBestConfiguration();

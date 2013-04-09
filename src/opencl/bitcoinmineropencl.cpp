@@ -22,13 +22,15 @@
 
 #define NOMINMAX
 
+#include "..\rpcminer\rpcminerthread.h"
+
 #include "bitcoinmineropencl.h"
 #include "openclshared.h"
 #include "../cryptopp/sha.h"	// for CryptoPP::ByteReverse
 #include <limits>
 #include <sstream>
 
-OpenCLRunner::OpenCLRunner():GPURunner<cl_uint,cl_uint>(TYPE_OPENCL),m_platform(0)
+OpenCLRunner::OpenCLRunner(threaddata* td):GPURunner<cl_uint,cl_uint>(td, TYPE_OPENCL),m_platform(0)
 {
 	m_in=0;
 	m_devin=0;
@@ -78,6 +80,12 @@ OpenCLRunner::OpenCLRunner():GPURunner<cl_uint,cl_uint>(TYPE_OPENCL),m_platform(
 			cl_device_id *devices=new cl_device_id[m_devicecount];
 			clGetDeviceIDs(pids[m_platform],CL_DEVICE_TYPE_GPU,m_devicecount,devices,NULL);
 
+			// set suggested device
+			if (m_deviceindex == -1 && td->m_deviceIndex >= 0)
+			{
+				m_deviceindex = td->m_deviceIndex;
+			}
+
 			if(m_deviceindex>=0 && m_deviceindex<m_devicecount)
 			{
 				m_device=devices[m_deviceindex];
@@ -91,7 +99,7 @@ OpenCLRunner::OpenCLRunner():GPURunner<cl_uint,cl_uint>(TYPE_OPENCL),m_platform(
 				printf("Setting OpenCL device to first device found\n");
 				clGetDeviceIDs(pids[m_platform],CL_DEVICE_TYPE_GPU,1,&m_device,NULL);
 			}
-
+			td->m_deviceIndex = m_deviceindex;
 
 			clGetDeviceInfo(m_device,CL_DEVICE_EXTENSIONS,0,0,&tempsize);
 			if(tempsize>0)

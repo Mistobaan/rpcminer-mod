@@ -7,11 +7,43 @@
 #include "../cryptopp/sha.h"
 #include <limits>
 
+struct nextblock
+{
+	int64 m_blockid;
+	uint256 m_target;
+	std::vector<unsigned char> m_midstate;
+	std::vector<unsigned char> m_block;
+	std::vector<unsigned char> m_hash1;
+};
+
+struct foundhash
+{
+	foundhash():m_blockid(0),m_nonce(0)												{ }
+	foundhash(int64 blockid, unsigned int nonce):m_blockid(blockid),m_nonce(nonce)	{ }
+
+	int64 m_blockid;
+	unsigned int m_nonce;
+};
+
+struct threaddata
+{
+	CCriticalSection m_cs;
+	bool m_generate;
+	bool m_done;
+	bool m_havework;
+	nextblock m_nextblock;
+	std::vector<foundhash> m_foundhashes;
+	int64 m_hashcount;
+	bool m_error;
+	int m_deviceIndex;
+};
+
 class RPCMinerThread
 {
 public:
-	RPCMinerThread()
+	RPCMinerThread(int deviceIndex)
 	{
+		m_threaddata.m_deviceIndex = deviceIndex;
 		m_threaddata.m_done=true;
 		m_threaddata.m_havework=false;
 	}
@@ -22,15 +54,6 @@ public:
 			Stop();
 		}
 	}
-
-	struct foundhash
-	{
-		foundhash():m_blockid(0),m_nonce(0)												{ }
-		foundhash(int64 blockid, unsigned int nonce):m_blockid(blockid),m_nonce(nonce)	{ }
-
-		int64 m_blockid;
-		unsigned int m_nonce;
-	};
 
 	virtual const bool Start()
 	{
@@ -58,6 +81,11 @@ public:
 	const bool HasError()
 	{
 		return m_threaddata.m_error;
+	}
+
+	const int DeviceIndex()
+	{
+		return m_threaddata.m_deviceIndex;
 	}
 
 	const bool HaveFoundHash()
@@ -140,28 +168,7 @@ protected:
 		return blocks;
 	}
 
-	struct nextblock
-	{
-		int64 m_blockid;
-		uint256 m_target;
-		std::vector<unsigned char> m_midstate;
-		std::vector<unsigned char> m_block;
-		std::vector<unsigned char> m_hash1;
-	};
-
-	struct threaddata
-	{
-		CCriticalSection m_cs;
-		bool m_generate;
-		bool m_done;
-		bool m_havework;
-		nextblock m_nextblock;
-		std::vector<foundhash> m_foundhashes;
-		int64 m_hashcount;
-		bool m_error;
-	};
-
-	threaddata m_threaddata;
+	protected :threaddata m_threaddata;
 
 };
 
@@ -249,6 +256,20 @@ public:
 		return false;
 	}
 
+	const int LastDeviceIndex() const
+	{
+		int deviceIndex = -1;
+		for(std::vector<RPCMinerThread *>::const_iterator i=m_minerthreads.begin(); i!=m_minerthreads.end(); i++)
+		{
+			int thisDeviceIndex = (*i)->DeviceIndex();
+			if (thisDeviceIndex > deviceIndex)
+			{
+				deviceIndex = thisDeviceIndex;
+			}
+		}
+		return deviceIndex;
+	}
+
 	void ClearWork()
 	{
 		for(std::vector<RPCMinerThread *>::const_iterator i=m_minerthreads.begin(); i!=m_minerthreads.end(); i++)
@@ -269,7 +290,7 @@ public:
 		return false;
 	}
 
-	const bool GetFoundHash(RPCMinerThread::foundhash &hash)
+	const bool GetFoundHash(foundhash &hash)
 	{
 		for(std::vector<RPCMinerThread *>::iterator i=m_minerthreads.begin(); i!=m_minerthreads.end(); i++)
 		{

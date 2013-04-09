@@ -22,7 +22,7 @@
 
 #include "rpcminerthreadgpu.h"
 
-RPCMinerThreadGPU::RPCMinerThreadGPU()
+RPCMinerThreadGPU::RPCMinerThreadGPU(int deviceIndex) : RPCMinerThread(deviceIndex)
 {
 }
 
@@ -53,7 +53,7 @@ void RPCMinerThreadGPU::Run(void *arg)
     blockbuffptr = alignup < 16 > (currentblockbuff);
     nonce = (unsigned int *) (blockbuffptr + 12);
 
-		gpurunnertype gpu;
+		gpurunnertype gpu(td);
 
     if (gpu.GetDeviceIndex() < 0)
     {

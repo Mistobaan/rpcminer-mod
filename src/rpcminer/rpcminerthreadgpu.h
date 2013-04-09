@@ -32,7 +32,7 @@ private:
     typedef unsigned int uint32;
 
 public:
-    RPCMinerThreadGPU();
+    RPCMinerThreadGPU(int deviceIndex);
     ~RPCMinerThreadGPU();
 
     virtual const bool Start()

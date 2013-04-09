@@ -228,7 +228,8 @@ void RPCMinerClient::Run(const std::string &url, const std::string &user, const 
 	{
 		if(m_minerthreads.RunningThreadCount()<m_threadcount)
 		{
-			m_minerthreads.Start(new threadtype);
+			int nextDeviceIndex = m_minerthreads.LastDeviceIndex() + 1;
+			m_minerthreads.Start(new threadtype(nextDeviceIndex));
 		}
 
 	/*	if(lastrequestedwork<=GetTimeMillis()-m_workrefreshms)
@@ -251,7 +252,7 @@ void RPCMinerClient::Run(const std::string &url, const std::string &user, const 
 		if(m_minerthreads.HaveFoundHash())
 		{
 			std::cout << GetTimeStr(time(0)) << " Found Hash!" << std::endl;
-			RPCMinerThread::foundhash fhash;
+			foundhash fhash;
 			m_minerthreads.GetFoundHash(fhash);
 			++counter;
 			std::cout<<"Hashs found: "<<counter<<std::endl;
@@ -329,19 +330,19 @@ void RPCMinerClient::SendFoundHash(const int64 blockid, const unsigned int nonce
 		obj.push_back(json_spirit::Pair("params",params));
 		obj.push_back(json_spirit::Pair("id",1));
 
-		std::cout << "Sending to server: " << json_spirit::write(obj) << std::endl;
+		// std::cout << "Sending to server: " << json_spirit::write(obj) << std::endl;
 
 		int tries=0;
 		bool done=false;
 		while((done=m_rpcreq.DoRequest(json_spirit::write(obj),res))==false && tries++<5)
 		{
-			std::cout << "Retrying" << std::endl;
+			//std::cout << "Retrying" << std::endl;
 			Sleep(100);
 		}
 
 		if(done)
 		{
-			std::cout << "Server sent: " << res << std::endl;
+			//std::cout << "Server sent: " << res << std::endl;
 			m_foundcount++;
 		}
 		else

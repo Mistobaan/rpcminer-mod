@@ -18,7 +18,7 @@
 
 #define NOMINMAX
 
-#include "..\rpcminer\rpcminerthread.h"
+#include "../rpcminer/rpcminerthread.h"
 
 #include "bitcoinminercuda.h"
 #include "cudashared.h"

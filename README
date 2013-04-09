@@ -1,4 +1,4 @@
-This is the Windows build of psychocoder's version of rpcminer-mod (https://github.com/psychocoder-germany/rpcminer-mod) - until it gets merged. It should still be compatible with unix, just has added Windows compatability.
+This is the Windows 64-bit build of psychocoder's version of rpcminer-mod (https://github.com/psychocoder-germany/rpcminer-mod) - until it gets merged. It should still be compatible with unix, just has added Windows compatability.
 
 See "NVIDIA Kepler (K20) from 134MHash/s to 330MHash/s with CUDA" (https://bitcointalk.org/index.php?topic=163750)
 
@@ -13,7 +13,6 @@ Windows
 	
 		(see https://bitcointalk.org/index.php?topic=163750 for optimised paramters)
 
-	
 	ATI/OpenCL:
 
 	Download and install the AMD APP for OpenCL.
@@ -31,11 +30,11 @@ Windows
 		NVIDIA: GPU Computing Toolkit for CUDA 64-bit (5.x), or
 		ATI: AMD APP for OpenCL.
 
-	Expand all the 7z files in the "external" directory.
+	Expand all the 7z files in the "deps.x64" directory.
 
 	Open solution and make sure CUDA or OpenCL includes and library paths for each project are correct.
 
-	Build.	
+	Build.
 
 UNIX
 ====

@@ -2,7 +2,7 @@ This is the Windows 64-bit build of psychocoder's version of rpcminer-mod (https
 
 See "NVIDIA Kepler (K20) from 134MHash/s to 330MHash/s with CUDA" (https://bitcointalk.org/index.php?topic=163750)
 
-This mod is primarily for better optimisations with the newer K20 NVIDIA cards, such as GTX TITAN and Tesla K20. You can still use it on all NVIDIA CUDA compatibale cards, but you may not see any great improvements with other mining software.
+This mod is primarily for better optimisations with the newer K20 NVIDIA cards, such as GTX TITAN and Tesla K20. You can still use it on all NVIDIA CUDA compatibale cards, but you may not see any great improvements over other mining software.
 
 Windows
 =======
@@ -72,7 +72,11 @@ Build
 	
 	cmake .
 	make
-	cmake-rpcminer/rpcminer -url=http://<yourpool>:port -user=username -password=password -gpu -gputhreads=256 -aggression=11
+	
+Run
+
+	cd cmake-rpcminer
+	./rpcminer -url=http://<yourpool>:port -user=username -password=password -gpu -gputhreads=256 -aggression=11
 
 *********************
  

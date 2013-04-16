@@ -67,7 +67,7 @@
     <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
     <CustomBuildAfterTargets>Build</CustomBuildAfterTargets>
     <CustomBuildBeforeTargets>BuildCompile</CustomBuildBeforeTargets>
-    <TargetName>$(ProjectName)-debug</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -197,6 +197,7 @@
     <ClCompile Include="src\rpcminer\rpcminerthreadgpu.cpp" />
     <ClCompile Include="src\rpcminer\rpcrequest.cpp" />
     <ClCompile Include="src\sha256.cpp" />
+    <ClCompile Include="src\stackwalker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\base58.h" />
